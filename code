@@ -1,0 +1,135 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cmath>
+using namespace std;
+#define PI 3.14
+
+struct Shape {
+    virtual double getPerimeter() = 0;
+    virtual double getArea() = 0;
+};
+
+struct Square : public Shape {
+    double a;
+    Square(double a) : a(a) {}
+    double getPerimeter() {
+        return 4 * a;
+    }
+    double getArea() {
+        return a * a;
+    }
+};
+
+struct Circle : public Shape {
+    double r;
+    Circle(double r) : r(r) {}
+    double getPerimeter() {
+        return 2 * PI * r;
+    }
+    double getArea() {
+        return PI * r * r;
+    }
+};
+
+struct Rectangle : public Shape {
+    double w, h;
+    Rectangle(double w, double h) : w(w), h(h) {}
+    double getPerimeter() {
+        return 2 * (w + h);
+    }
+    double getArea() {
+        return w * h;
+    }
+};
+
+int main() {
+    ifstream file("input.txt");
+    string line;
+    getline(file, line);
+    int n = stoi(line);
+    int squareCount = 0, circleCount = 0, rectangleCount = 0;
+    double maxPerimeter = -numeric_limits<double>::infinity(), maxArea = -numeric_limits<double>::infinity();
+    double minPerimeter = numeric_limits<double>::infinity(), minArea = numeric_limits<double>::infinity();
+    string maxPerimeterShape, maxAreaShape, minPerimeterShape, minAreaShape;
+    for (int i = 0; i < n; i++) {
+        getline(file, line);
+        if (line.find("Square") != string::npos) {
+            double a = stod(line.substr(line.find("=") + 1));
+            Square square(a);
+            cout << "Square: a=" << a << "=> Perimeter=" << square.getPerimeter() << ", Area=" << square.getArea() << endl;
+            squareCount++;
+            if (square.getPerimeter() > maxPerimeter) {
+                maxPerimeter = square.getPerimeter();
+                maxPerimeterShape = line;
+            }
+            if (square.getArea() > maxArea) {
+                maxArea = square.getArea();
+                maxAreaShape = line;
+            }
+            if (square.getPerimeter() < minPerimeter) {
+                minPerimeter = square.getPerimeter();
+                minPerimeterShape = line;
+            }
+            if (square.getArea() < minArea) {
+                minArea = square.getArea();
+                minAreaShape = line;
+            }
+        }
+        else if (line.find("Circle") != string::npos) {
+            double r = stod(line.substr(line.find("=") + 1));
+            Circle circle(r);
+            cout << "Circle: r=" << r << "=> Perimeter=" << circle.getPerimeter() << ", Area=" << circle.getArea() << endl;
+            circleCount++;
+            if (circle.getPerimeter() > maxPerimeter) {
+                maxPerimeter = circle.getPerimeter();
+                maxPerimeterShape = line;
+            }
+            if (circle.getArea() > maxArea) {
+                maxArea = circle.getArea();
+                maxAreaShape = line;
+            }
+            if (circle.getPerimeter() < minPerimeter) {
+                minPerimeter = circle.getPerimeter();
+                minPerimeterShape = line;
+            }
+            if (circle.getArea() < minArea) {
+                minArea = circle.getArea();
+                minAreaShape = line;
+            }
+        }
+        else if (line.find("Rectangle") != string::npos) {
+            double w = stod(line.substr(line.find("w=") + 2, line.find(",") - line.find("w=") - 2));
+            double h = stod(line.substr(line.find("h=") + 2));
+            Rectangle rectangle(w, h);
+            cout << "Rectangle: w=" << w << ", h=" << h << "=> Perimeter=" << rectangle.getPerimeter() << ", Area=" << rectangle.getArea() << endl;
+            rectangleCount++;
+            if (rectangle.getPerimeter() > maxPerimeter) {
+                maxPerimeter = rectangle.getPerimeter();
+                maxPerimeterShape = line;
+            }
+            if (rectangle.getArea() > maxArea) {
+                maxArea = rectangle.getArea();
+                maxAreaShape = line;
+            }
+            if (rectangle.getPerimeter() < minPerimeter) {
+                minPerimeter = rectangle.getPerimeter();
+                minPerimeterShape = line;
+            }
+            if (rectangle.getArea() < minArea) {
+                minArea = rectangle.getArea();
+                minAreaShape = line;
+            }
+        }
+    }
+    file.close();
+    cout << "Shape with maximum perimeter: " << maxPerimeterShape << ", Perimeter: " << maxPerimeter << endl;
+    cout << "Shape with maximum area: " << maxAreaShape << ", Area: " << maxArea << endl;
+    cout << "Shape with minimum perimeter: " << minPerimeterShape << ", Perimeter: " << minPerimeter << endl;
+    cout << "Shape with minimum area: " << minAreaShape << ", Area: " << minArea << endl;
+    cout << "Thong ke cac hinh da doc: " << endl;
+    cout << "Number of squares: " << squareCount << endl;
+    cout << "Number of circles: " << circleCount << endl;
+    cout << "Number of rectangles: " << rectangleCount << endl;
+    return 0;
+}
